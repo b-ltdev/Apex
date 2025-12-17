@@ -9,7 +9,7 @@ end
 
 local Success, Script = pcall(function()
     return game:HttpGet(
-        "https://raw.githubusercontent.com/b-ltdev/Apex/refs/heads/main/modules/" .. PlaceId .. ".lua"
+        "https://raw.githubusercontent.com/b-ltdev/Apex/refs/heads/master/modules/" .. PlaceId .. ".lua"
     )
 end)
 
