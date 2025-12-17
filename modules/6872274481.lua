@@ -184,7 +184,7 @@ task.spawn(function()
             wait(9)
             game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space, false, game)
             if mouse1click and mousemoveabs then 
-                mousemoveabs(0.2 * workspace.CurrentCamera.ViewportSize.X, 0.2 * workspace.CurrentCamera.ViewportSize.X)
+                mousemoveabs(0.1 * workspace.CurrentCamera.ViewportSize.X, 0.1 * workspace.CurrentCamera.ViewportSize.X)
                 wait(0.5)
                 mouse1click() 
             end
