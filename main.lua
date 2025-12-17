@@ -3,7 +3,7 @@ repeat task.wait() until game:IsLoaded()
 local PlaceId = game.PlaceId
 
 if PlaceId == 0 or PlaceId == nil then
-    queue_on_teleport("https://raw.githubusercontent.com/b-ltdev/Apex/refs/heads/main/main.lua")
+    queue_on_teleport("https://raw.githubusercontent.com/b-ltdev/Apex/refs/heads/master/main.lua")
     return
 end
 
@@ -18,5 +18,5 @@ if not Success or not Script or Script == "" then
     return
 end
 
-queue_on_teleport("https://raw.githubusercontent.com/b-ltdev/Apex/refs/heads/main/main.lua")
+queue_on_teleport("https://raw.githubusercontent.com/b-ltdev/Apex/refs/heads/master/main.lua")
 loadstring(Script)
