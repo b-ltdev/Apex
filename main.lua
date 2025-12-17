@@ -8,9 +8,7 @@ if PlaceId == 0 or PlaceId == nil then
 end
 
 local Success, Script = pcall(function()
-    return game:HttpGet(
-        "https://raw.githubusercontent.com/b-ltdev/Apex/refs/heads/master/modules/" .. PlaceId .. ".lua"
-    )
+    return game:HttpGet("https://raw.githubusercontent.com/b-ltdev/Apex/refs/heads/master/modules/" .. PlaceId .. ".lua")
 end)
 
 if not Success or not Script or Script == "" then
