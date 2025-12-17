@@ -159,61 +159,65 @@ local function ResetAndQueue()
 end
 
 task.spawn(function()
+	local busy = false
+
 	while true do
+		if busy or Player.PlayerGui:FindFirstChild("QueueApp") then
+			task.wait(1)
+			continue
+		end
+
 		if not HasMatchStarted() then
 			task.wait(0.5)
 			continue
 		end
 
+		busy = true
+
 		local char = Player.Character
 		local root = char and char:FindFirstChild("HumanoidRootPart")
-		local looted = false
 
 		if root then
 			local chestModel, chestPos = GetNearestChest(root)
 			if chestModel and chestPos then
 				WalkToChest(chestPos)
-				looted = LootChest(chestModel)
+				LootChest(chestModel)
 			end
 		end
-        task.spawn(function()
-            game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.W, false, game) -- bypass bedwars anti queue
-            game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space, false, game)
-            wait(0.1)
-            game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.W, false, game)
-            wait(9)
-            game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space, false, game)
-            if mouse1click and mousemoveabs then 
-                mousemoveabs(0.1 * workspace.CurrentCamera.ViewportSize.X, 0.1 * workspace.CurrentCamera.ViewportSize.X)
-                wait(0.5)
-                mouse1click() 
-            end
-        end)
 
-		if looted then
-			repeat
-				task.wait(0.2)
-			until CanResetMatch()
+		task.spawn(function()
+			if Player.PlayerGui:FindFirstChild("QueueApp") then return end
 
+			local vim = game:GetService("VirtualInputManager")
+			vim:SendKeyEvent(true, Enum.KeyCode.W, false, game)
+			vim:SendKeyEvent(true, Enum.KeyCode.Space, false, game)
+			task.wait(0.1)
+			vim:SendKeyEvent(false, Enum.KeyCode.W, false, game)
+			task.wait(9)
+			vim:SendKeyEvent(false, Enum.KeyCode.Space, false, game)
+
+			if Player.PlayerGui:FindFirstChild("QueueApp") then return end
+			if mouse1click then
+				mouse1click()
+			end
+		end)
+
+		repeat task.wait(0.2) until CanResetMatch()
+
+		if not Player.PlayerGui:FindFirstChild("QueueApp") then
 			task.wait(QueueDelay)
 			ResetAndQueue()
-			task.wait(1)
-            if not Player.PlayerGui:FindFirstChild("QueueApp") then
-                game:GetService("TeleportService"):Teleport(6872265039, Player)
-            end
-		else
-            -- add retrying again later
-
-			repeat
-				task.wait(0.2)
-			until CanResetMatch()
-
-			task.wait(QueueDelay)
-			ResetAndQueue()
-			task.wait(5)
-            if not Player.PlayerGui:FindFirstChild("QueueApp") then
-                game:GetService("TeleportService"):Teleport(6872265039, Player)
-            end
 		end
+
+		local start = tick()
+		repeat
+			task.wait(0.5)
+		until Player.PlayerGui:FindFirstChild("QueueApp") or tick() - start > 12
+
+		if not Player.PlayerGui:FindFirstChild("QueueApp") then
+			game:GetService("TeleportService"):Teleport(6872265039, Player)
+		end
+
+		busy = false
 	end
 end)
