@@ -176,12 +176,14 @@ task.spawn(function()
 				looted = LootChest(chestModel)
 			end
 		end
-
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.W, false, game) -- bypass bedwars anti queue
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space, false, game)
-        wait(0.1)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.W, false, game)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space, false, game)
+        task.spawn(function()
+            game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.W, false, game) -- bypass bedwars anti queue
+            game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space, false, game)
+            wait(0.1)
+            game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.W, false, game)
+            wait(9)
+            game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space, false, game)
+        end)
 
 		if looted then
 			repeat
