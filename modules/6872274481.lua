@@ -2,9 +2,9 @@ local Players = game:GetService("Players")
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local LOOT_RANGE = 18
-local LOOT_DELAY = 0.2
-local QUEUE_DELAY = 2
+local LootRange = 18
+local LootDelay = 0.2
+local QueueDelay = 2
 local Player = Players.LocalPlayer
 local Delays = {}
 
@@ -135,7 +135,7 @@ local function LootChest(chestModel)
 		return false
 	end
 
-	Delays[chest] = tick() + LOOT_DELAY
+	Delays[chest] = tick() + LootDelay
 	setObservedChest:FireServer(chest)
 	for _, item in ipairs(chestItems) do
 		if item:IsA("Accessory") then
@@ -183,6 +183,11 @@ task.spawn(function()
             game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.W, false, game)
             wait(9)
             game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space, false, game)
+            if mouse1click and mousemoveabs then 
+                mousemoveabs(0.2 * workspace.CurrentCamera.ViewportSize.X, 0.2 * workspace.CurrentCamera.ViewportSize.X)
+                wait(0.5)
+                mouse1click() 
+            end
         end)
 
 		if looted then
@@ -190,9 +195,12 @@ task.spawn(function()
 				task.wait(0.2)
 			until CanResetMatch()
 
-			task.wait(QUEUE_DELAY)
+			task.wait(QueueDelay)
 			ResetAndQueue()
 			task.wait(1)
+            if not Player.PlayerGui:FindFirstChild("QueueApp") then
+                game:GetService("TeleportService"):Teleport(6872265039, Player)
+            end
 		else
             -- add retrying again later
 
@@ -200,9 +208,12 @@ task.spawn(function()
 				task.wait(0.2)
 			until CanResetMatch()
 
-			task.wait(QUEUE_DELAY)
+			task.wait(QueueDelay)
 			ResetAndQueue()
-			task.wait(1)
+			task.wait(5)
+            if not Player.PlayerGui:FindFirstChild("QueueApp") then
+                game:GetService("TeleportService"):Teleport(6872265039, Player)
+            end
 		end
 	end
 end)
