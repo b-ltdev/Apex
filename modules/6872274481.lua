@@ -2,9 +2,9 @@ local Players = game:GetService("Players")
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local LootRange = 18
-local LootDelay = 0.2
-local QueueDelay = 2
+local LOOT_RANGE = 18
+local LOOT_DELAY = 0.2
+local QUEUE_DELAY = 2
 local Player = Players.LocalPlayer
 local Delays = {}
 
@@ -126,7 +126,7 @@ local function LootChest(chestModel)
 		return false
 	end
 
-	if (delays[chest] or 0) > tick() then
+	if (Delays[chest] or 0) > tick() then
 		return false
 	end
 
@@ -135,7 +135,7 @@ local function LootChest(chestModel)
 		return false
 	end
 
-	delays[chest] = tick() + LOOT_DELAY
+	Delays[chest] = tick() + LOOT_DELAY
 	setObservedChest:FireServer(chest)
 	for _, item in ipairs(chestItems) do
 		if item:IsA("Accessory") then
@@ -177,6 +177,12 @@ task.spawn(function()
 			end
 		end
 
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.W, false, game) -- bypass bedwars anti queue
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space, false, game)
+        wait(0.1)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.W, false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space, false, game)
+
 		if looted then
 			repeat
 				task.wait(0.2)
@@ -186,7 +192,15 @@ task.spawn(function()
 			ResetAndQueue()
 			task.wait(1)
 		else
-			task.wait(0.1)
+            -- add retrying again later
+
+			repeat
+				task.wait(0.2)
+			until CanResetMatch()
+
+			task.wait(QUEUE_DELAY)
+			ResetAndQueue()
+			task.wait(1)
 		end
 	end
 end)
