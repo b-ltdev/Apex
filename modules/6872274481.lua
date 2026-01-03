@@ -6,6 +6,7 @@ local LootRange = 18
 local LootDelay = 0.2
 local QueueDelay = 2
 local Player = Players.LocalPlayer
+local HasLootedAnItem = false
 local Delays = {}
 
 local function Queue(typeName)
@@ -139,11 +140,14 @@ local function LootChest(chestModel)
 	setObservedChest:FireServer(chest)
 	for _, item in ipairs(chestItems) do
 		if item:IsA("Accessory") then
-			task.spawn(function()
-				pcall(function()
-					chestGetItem:InvokeServer(chest, item)
+			if not HasLootedAnItem then
+				HasLootedAnItem = true
+				task.spawn(function()
+					pcall(function()
+						chestGetItem:InvokeServer(chest, item)
+					end)
 				end)
-			end)
+			end
 		end
 	end
 	setObservedChest:FireServer(nil)
