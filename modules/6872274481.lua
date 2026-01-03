@@ -52,7 +52,7 @@ local function CanResetMatch()
 	end
 
 	if mm == 0 then
-		return ss >= 31
+		return ss >= 10
 	end
 
 	return false
